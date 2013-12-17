@@ -16,6 +16,7 @@ double randomReal();
 vector<vector<double> >* getRandomWeightArray(int,int);
 void printVec(vector<double>*);
 void print2dVec(vector<vector<double> > *vec);
+double mse(vector<double>&);
 
 //NeuralNetwork class
 
@@ -40,19 +41,33 @@ void NeuralNetwork::addLayer(int nodes) {
 
 void NeuralNetwork::train(vector<Pattern*> patterns) {
 	log("Training pattern");
-	for(int i=0;i<patterns.size();i++) {
-		this->trainPattern(patterns[i]);
+
+	int i = 0;
+	int numPats = patterns.size();
+	double error = 1.0;
+	double sum = 0.0;
+	while(i<maxIter && error > errorThresh) {
+		sum = 0.0;
+		for(int i=0;i<numPats;i++) {
+			sum += this->trainPattern(patterns[i]);
+		}
+		error = sum / (double) numPats;
+		i++;
 	}
+	cout << "Error: " << error << endl;
+	cout << "Iterations: " << i << endl;
 }
 
-void NeuralNetwork::trainPattern(Pattern *pat) {
+double NeuralNetwork::trainPattern(Pattern *pat) {
 	//run network normally
 	run(pat->inputs);
 	//backpropagation
 	log("Expected result");
 	if(DEBUG) printVec(pat->outputs);
-	findError(pat->outputs);
+	double err = findError(pat->outputs);
 	adjustWeights();
+
+	return err;
 }
 
 vector<double> NeuralNetwork::run(vector<double> *inputs) {
@@ -68,7 +83,7 @@ vector<double> NeuralNetwork::run(vector<double> *inputs) {
 	return layers.back()->outputs;
 }
 
-void NeuralNetwork::findError(vector<double> *outputs) {
+double NeuralNetwork::findError(vector<double> *outputs) {
 	log("Beginning error computation.");
 	//run findOutputLayerError on last layer using outputs
 	//run findHiddenLayerError on all other layers, except for input, using the predecessor's delta vector
@@ -84,6 +99,8 @@ void NeuralNetwork::findError(vector<double> *outputs) {
 			layer1.findHiddenLayerError(layer2.deltas);
 		}
 	}
+
+	return mse(layers.back()->outputs);
 }
 
 void NeuralNetwork::adjustWeights() {
@@ -202,7 +219,7 @@ void Layer::propagate(vector<double> &incoming) {
 	}
 
 	for(int i=0;i<outputs.size();i++) {
-		outputs[i]= biases[i]; //can later be replaced by a bias
+		outputs[i] = biases[i];
 		for(int j=0;j<incoming.size();j++) {
 			double o = incoming[j] * (*backWeights)[j][i];
 			outputs[i] += o;
@@ -210,6 +227,7 @@ void Layer::propagate(vector<double> &incoming) {
 		}
 		outputs[i]=sigmoid(outputs[i]);
 	}
+
 	if(DEBUG) {
 		cout << "Outgoing: ";
 		printVec(&outputs);
@@ -251,4 +269,13 @@ void print2dVec(vector<vector<double> > *vec) {
 	{
 		printVec(&((*vec)[i]));
 	}
+}
+
+double mse(vector<double> &errors) {
+	double err = 0.0;
+	for (int i = 0; i < errors.size(); ++i)
+	{
+		err += pow(errors[i],2.0);
+	}
+	return err;
 }

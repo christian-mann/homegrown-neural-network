@@ -13,15 +13,17 @@ class NeuralNetwork {
 public:
 	NeuralNetwork(int,int,const vector<int>); 		//initializes a Network with given inputs, outputs, and hidden layer sizes
 	void train(vector<Pattern*>);					//runs trainPattern on a list of patterns
-	void trainPattern(Pattern*);						//uses a pattern to train the network
+	double trainPattern(Pattern*);						//uses a pattern to train the network
 	vector<double> run(vector<double>*);		//propogates given inputs through network and returns the network output
-	void findError(vector<double>*);				//use a set of outputs for the output layer and propagates back
+	double findError(vector<double>*);				//use a set of outputs for the output layer and propagates back
 	void adjustWeights();								//uses errors and deltas found in findError to adjust edge weights
 	void addLayer(int);									//appends a new layer of size int to the end of the existing network
 	void printNetwork(); 								//print all layer adj mats to stdout
 	vector<Layer*> layers; 						//vector of pointers to Layers
-	double learningRate = 0.8;
-	double momentum = 0.3;
+	double learningRate = 0.3;
+	double momentum = 0.1;
+	int maxIter = 20000;
+	double errorThresh = 0.005;
 };
 
 class Layer {
