@@ -58,10 +58,8 @@ void NeuralNetwork::train(vector<Pattern*> patterns) {
 		}
 		error = sum / (double) numPats;
 		i++;
-		if(i%100==0) cout << sum << error << endl;
+		if(i % 100 == 0) cout << "Error: " << error << "; Iterations: " << i << "\r";
 	}
-	cout << "Error: " << error << endl;
-	cout << "Iterations: " << i << endl;
 }
 
 double NeuralNetwork::trainPattern(Pattern *pat) {
