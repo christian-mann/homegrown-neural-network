@@ -231,11 +231,6 @@ void Layer::propagate(vector<double> &incoming) {
 		}
 		outputs[i]=sigmoid(outputs[i]);
 	}
-
-	if(DEBUG) {
-		cout << "Outgoing: ";
-		printVec(&outputs);
-	}
 }
 
 //Util functions
