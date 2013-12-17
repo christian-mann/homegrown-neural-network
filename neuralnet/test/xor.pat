@@ -1,5 +1,5 @@
-2 1 2 	#inputs outputs hiddenLayerSizes
-4 4 	#trainingPats validPats
+2 1 2 	#inputs outputs hiddenLayerSizes(minimum 1)
+4 4 	#trainingPats validationPats(currently not used)
 0.0 0.0 #input 1
 0.0 	#output 1
 0.0 1.0 #input 2

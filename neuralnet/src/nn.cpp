@@ -46,14 +46,11 @@ void NeuralNetwork::train(std::vector<Pattern*> patterns) {
 
 void NeuralNetwork::trainPattern(Pattern *pat) {
 	//run network normally
-	// cout << "Running..." << endl;
 	run(pat->inputs);
 	//backpropagation
 	log("Expected result");
 	if(DEBUG) printVec(pat->outputs);
-	// cout << "Backprop , find error..." << endl;
-	this->findError(pat->outputs);
-	// cout << "Backprop , adj weights..." << endl;
+	findError(pat->outputs);
 	adjustWeights();
 }
 
@@ -72,11 +69,12 @@ std::vector<double> NeuralNetwork::run(std::vector<double> *inputs) {
 
 void NeuralNetwork::findError(std::vector<double> *outputs) {
 	log("Beginning error computation.");
-	// std::vector<Layer*>::iterator it;
 	//run findOutputLayerError on last layer using outputs
 	//run findHiddenLayerError on all other layers, except for input, using the predecessor's delta vector
+
 	for (int i = layers.size()-1; i >= 1; i--) {
 		if(DEBUG) cout << "Computing error for layer " << i+1 << endl;
+
 		Layer& layer1 = *(layers[i]);
 		if(i==layers.size()-1) {
 			layer1.findOutputLayerError(*outputs);
@@ -91,8 +89,7 @@ void NeuralNetwork::adjustWeights() {
 	//use each output as incoming values over every edge
 	//adjust each edge according to:
 	//change = learningRate*delta*incoming[k]+momentum*change
-	// std::vector<Layer*>::iterator it;
-	// for (it = layers.begin()+1; it != layers.end(); it++) {
+
 	log("Adjusting edge weights");
 	for (int i = 1; i < layers.size(); i++) {
 		if(DEBUG) cout << "Adjusting layer "<<i+1 << endl;
