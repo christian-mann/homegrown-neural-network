@@ -38,6 +38,7 @@ public:
 	vector<double> outputs;
 	vector<double> errors;
 	vector<double> deltas;
+	vector<double> biases;
 	vector< vector<double> > changes;			//memory of edge adjustment
 	vector< vector<double> > *backWeights;	//pointer to back edges
 	vector< vector<double> > *frontWeights;	//pointer to front edges

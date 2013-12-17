@@ -93,7 +93,7 @@ void NeuralNetwork::adjustWeights() {
 
 	log("Adjusting edge weights");
 	for (int i = 1; i < layers.size(); i++) {
-		if(true) cout << "Adjusting layer "<<i+1 << endl;
+		if(DEBUG) cout << "Adjusting layer "<<i+1 << endl;
 
 		Layer& layer1 = *(layers[i-1]);
 		Layer& layer2 = *(layers[i]);
@@ -115,6 +115,7 @@ Layer::Layer(int s) {
 	this->outputs.resize(s);
 	this->errors.resize(s);
 	this->deltas.resize(s);
+	for (int i = 0; i < s; ++i) biases.push_back(randomReal()*RANGE-RANGE/2);
 	this->changes.resize(s);
 }
 
@@ -143,11 +144,13 @@ void Layer::adjustWeights(double learningRate, double momentum, vector<double> &
 			(*backWeights)[j][i] += change;
 			changes[i][j] = change;
 
-			if(true) cout << "change: " << change << "=" << learningRate << " * " << deltas[i] << " * " << incoming[i] << endl;
+			if(DEBUG) cout << "change: " << change << "=" << learningRate << " * " << deltas[i] << " * " << incoming[i] << endl;
 		}
+
+		biases[i]+=learningRate*deltas[i];
 	}
 
-	if(true) print2dVec(&changes);
+	if(DEBUG) print2dVec(&changes);
 }
 
 void Layer::findHiddenLayerError(vector<double> &next_deltas) {
@@ -193,13 +196,13 @@ void Layer::printFrontWeights() {
 }
 
 void Layer::propagate(vector<double> &incoming) {
-	if(true) {
+	if(DEBUG) {
 		cout << "Incoming: ";
 		printVec(&incoming);
 	}
 
 	for(int i=0;i<outputs.size();i++) {
-		outputs[i]=0; //can later be replaced by a bias
+		outputs[i]= biases[i]; //can later be replaced by a bias
 		for(int j=0;j<incoming.size();j++) {
 			double o = incoming[j] * (*backWeights)[j][i];
 			outputs[i] += o;
@@ -207,7 +210,7 @@ void Layer::propagate(vector<double> &incoming) {
 		}
 		outputs[i]=sigmoid(outputs[i]);
 	}
-	if(true) {
+	if(DEBUG) {
 		cout << "Outgoing: ";
 		printVec(&outputs);
 	}
