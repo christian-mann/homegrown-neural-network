@@ -44,7 +44,17 @@ void NeuralNetwork::addLayer(int nodes) {
 	this->layers.push_back(newLayer);
 }
 
-void NeuralNetwork::train(vector<Pattern*> patterns) {
+double NeuralNetwork::validation(vector<Pattern*> &patterns,vector<vector<double> > &results) {
+	double totalErr = 0.0;
+	for (int i = 0; i < patterns.size(); ++i) {
+		results.push_back(run(patterns[i]->inputs));
+		double err = findError(patterns[i]->outputs);
+		totalErr += err;
+	}
+	return totalErr/patterns.size();
+}
+
+void NeuralNetwork::train(vector<Pattern*> &patterns) {
 	log("Training pattern");
 
 	int i = 0;
@@ -70,10 +80,10 @@ double NeuralNetwork::trainPattern(Pattern *pat) {
 	//backpropagation
 	log("Expected result");
 	if(DEBUG) printVec(pat->outputs);
-	findError(pat->outputs);
+	double error = findError(pat->outputs);
 	adjustWeights();
 
-	return mse(layers.back()->errors);;
+	return error;
 }
 
 vector<double> NeuralNetwork::run(vector<double> *inputs) {
@@ -89,7 +99,7 @@ vector<double> NeuralNetwork::run(vector<double> *inputs) {
 	return layers.back()->outputs;
 }
 
-void NeuralNetwork::findError(vector<double> *outputs) {
+double NeuralNetwork::findError(vector<double> *outputs) {
 	log("Beginning error computation.");
 	//run findOutputLayerError on last layer using outputs
 	//run findHiddenLayerError on all other layers, except for input, using the predecessor's delta vector
@@ -104,7 +114,9 @@ void NeuralNetwork::findError(vector<double> *outputs) {
 			Layer& layer2 = *(layers[i+1]);
 			layer1.findHiddenLayerError(layer2.deltas);
 		}
-	}	
+	}
+
+	return mse(layers.back()->errors);
 }
 
 void NeuralNetwork::adjustWeights() {

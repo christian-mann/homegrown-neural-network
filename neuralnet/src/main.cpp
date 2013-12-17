@@ -21,7 +21,8 @@ void parsePatternFile(ifstream &pat_file,
 					  int &inputs,
 					  int &outputs,
 					  vector<int> &hiddens,
-					  vector<Pattern*> &trainPats)
+					  vector<Pattern*> &trainPats,
+					  vector<Pattern*> &validPats)
 {
 	string line;
 	istringstream iss;
@@ -29,13 +30,19 @@ void parsePatternFile(ifstream &pat_file,
 	parseLine(pat_file,line);
 	iss.str(line);
 	iss.clear();
+
+	//read in first line
 	iss >> inputs >> outputs;
 	int h;
 	while(iss>>h) hiddens.push_back(h);
 	parseLine(pat_file,line);
 	iss.str(line);
 	iss.clear();
+
+	//read in second line
 	iss >> ntrains >> nvalids;
+
+	//read in training data
 	for (int i = 0; i < ntrains; ++i) {
 		Pattern *p = new Pattern();
 		vector<double> *inputs = new vector<double>();
@@ -43,6 +50,30 @@ void parsePatternFile(ifstream &pat_file,
 		(*p).inputs = inputs;
 		(*p).outputs = outputs;
 		trainPats.push_back(p);
+
+		parseLine(pat_file,line);
+		iss.str(line);
+		iss.clear();
+		double d;
+		while(iss >> d) {
+			(*inputs).push_back(d);
+		}
+		parseLine(pat_file,line);
+		iss.str(line);
+		iss.clear();
+		while(iss >> d) {
+			(*outputs).push_back(d);
+		}
+	}
+
+	//read in validation data
+	for (int i = 0; i < nvalids; ++i) {
+		Pattern *p = new Pattern();
+		vector<double> *inputs = new vector<double>();
+		vector<double> *outputs = new vector<double>();
+		(*p).inputs = inputs;
+		(*p).outputs = outputs;
+		validPats.push_back(p);
 
 		parseLine(pat_file,line);
 		iss.str(line);
@@ -78,8 +109,10 @@ int main(int argc, char const *argv[]) {
 	int inputs,outputs;
 	vector<int> hiddens;
 	vector<Pattern*> trainPats;
+	vector<Pattern*> validPats;
+	vector<vector<double> > results;
 
-	parsePatternFile(input_file,inputs,outputs,hiddens,trainPats);
+	parsePatternFile(input_file,inputs,outputs,hiddens,trainPats,validPats);
 
 	input_file.close();
 
@@ -88,25 +121,18 @@ int main(int argc, char const *argv[]) {
 	cout << "Weights before training:" << endl;
 	network.printNetwork();
 
-	cout << endl;
-	cout << "Test Run 1" << endl;
-	cout << "Input: 0,0 Output: " << network.run((*trainPats[0]).inputs)[0] << endl;
-	cout << "Input: 0,1 Output: " << network.run((*trainPats[1]).inputs)[0] << endl;
-	cout << "Input: 1,0 Output: " << network.run((*trainPats[2]).inputs)[0] << endl;
-	cout << "Input: 1,1 Output: " << network.run((*trainPats[3]).inputs)[0] << endl;
-
 	cout << endl << "Begin Training" << endl;
 	network.train(trainPats);
 
 	cout << endl << "Weights after training:" << endl;
 	network.printNetwork();
 
+	double validErr = network.validation(validPats,results);
 	cout << endl;
-	cout << "Test Run 2" << endl;
-	cout << "Input: 0,0 Output: " << network.run((*trainPats[0]).inputs)[0] << endl;
-	cout << "Input: 0,1 Output: " << network.run((*trainPats[1]).inputs)[0] << endl;
-	cout << "Input: 1,0 Output: " << network.run((*trainPats[2]).inputs)[0] << endl;
-	cout << "Input: 1,1 Output: " << network.run((*trainPats[3]).inputs)[0] << endl;
+	cout << "Validation Error:" << validErr << endl;
+	cout << "Outputs" << endl;
+
+	print2dVec(&results);
 
 	//HARD CODED XOR TEST
 

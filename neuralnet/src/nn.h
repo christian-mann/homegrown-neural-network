@@ -2,6 +2,7 @@
 #define nn_h
 
 #include "vector"
+#include "string"
 
 using namespace std;
 
@@ -9,13 +10,21 @@ class NeuralNetwork;
 class Pattern;
 class Layer;
 
+void log(string);
+double randomReal();
+vector<vector<double> >* getRandomWeightArray(int,int);
+void printVec(vector<double>*);
+void print2dVec(vector<vector<double> > *vec);
+double mse(vector<double>&);
+
 class NeuralNetwork {
 public:
 	NeuralNetwork(int,int,const vector<int>); 	//initializes a Network with given inputs, outputs, and hidden layer sizes
-	void train(vector<Pattern*>);				//runs trainPattern on a list of patterns
+	double validation(vector<Pattern*>&,vector<vector<double> >&);
+	void train(vector<Pattern*>&);				//runs trainPattern on a list of patterns
 	double trainPattern(Pattern*);				//uses a pattern to train the network
 	vector<double> run(vector<double>*);		//propogates given inputs through network and returns the network output
-	void findError(vector<double>*);			//use a set of outputs for the output layer and propagates back
+	double findError(vector<double>*);			//use a set of outputs for the output layer and propagates back
 	void adjustWeights();						//uses errors and deltas found in findError to adjust edge weights
 	void addLayer(int);							//appends a new layer of size int to the end of the existing network
 	void printNetwork(); 						//print all layer adj mats to stdout
