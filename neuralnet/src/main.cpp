@@ -83,8 +83,10 @@ int main(int argc, char const *argv[]) {
 	input_file.close();
 
 	NeuralNetwork network(inputs,outputs,hiddens);
+	cout << "Weights before training:" << endl;
 	network.printNetwork();
 	network.train(trainPats);
+	cout << endl << "Weights after training:" << endl;
 	network.printNetwork();
 
 	//HARD CODED XOR TEST

@@ -6,6 +6,7 @@
 #include "sstream"
 
 #define RANGE 5.0
+#define DEBUG false
 
 using namespace std;
 
@@ -49,7 +50,7 @@ void NeuralNetwork::trainPattern(Pattern *pat) {
 	run(pat->inputs);
 	//backpropagation
 	log("Expected result");
-	printVec(pat->outputs);
+	if(DEBUG) printVec(pat->outputs);
 	// cout << "Backprop , find error..." << endl;
 	this->findError(pat->outputs);
 	// cout << "Backprop , adj weights..." << endl;
@@ -63,8 +64,9 @@ std::vector<double> NeuralNetwork::run(std::vector<double> *inputs) {
 	for(int i=1;i<layers.size();i++) {
 		layers[i]->propagate(layers[i-1]->outputs);
 	}
+
 	log("Propagation complete. Result:");
-	printVec(&(layers.back()->outputs));
+	if(DEBUG) printVec(&(layers.back()->outputs));
 	return layers.back()->outputs;
 }
 
@@ -74,9 +76,7 @@ void NeuralNetwork::findError(std::vector<double> *outputs) {
 	//run findOutputLayerError on last layer using outputs
 	//run findHiddenLayerError on all other layers, except for input, using the predecessor's delta vector
 	for (int i = layers.size()-1; i >= 1; i--) {
-		stringstream strm;
-		strm << "Computing error for layer " << i+1;
-		log(strm.str());
+		if(DEBUG) cout << "Computing error for layer " << i+1 << endl;
 		Layer& layer1 = *(layers[i]);
 		if(i==layers.size()-1) {
 			layer1.findOutputLayerError(*outputs);
@@ -95,9 +95,7 @@ void NeuralNetwork::adjustWeights() {
 	// for (it = layers.begin()+1; it != layers.end(); it++) {
 	log("Adjusting edge weights");
 	for (int i = 1; i < layers.size(); i++) {
-		stringstream strm;
-		strm << "Adjusting layer "<<i+1;
-		log(strm.str());
+		if(DEBUG) cout << "Adjusting layer "<<i+1 << endl;
 
 		Layer& layer1 = *(layers[i-1]);
 		Layer& layer2 = *(layers[i]);
@@ -134,17 +132,13 @@ void Layer::adjustWeights(double learningRate, std::vector<double> &incoming) {
 
 		for (int j = 0; j < incoming.size(); j++) {
 
-			stringstream strm;
-			strm << "Adjusting node "<< i+1 << " edge "<<j+1;
-			log(strm.str());
+			if(DEBUG) cout << "Adjusting node "<< i+1 << " edge "<<j+1 << endl;
 
 			double change = learningRate*deltas[i]*incoming[j];//+momentum*changes[j];
 			
 			(*backWeights)[j][i]+=change;
 
-			stringstream strm2;
-			strm2 << "change: " << change << "=" << learningRate << " * " << deltas[i] << " * " << incoming[i];
-			log(strm2.str());
+			if(DEBUG) cout << "change: " << change << "=" << learningRate << " * " << deltas[i] << " * " << incoming[i];
 		}
 	}
 }
@@ -161,9 +155,7 @@ void Layer::findHiddenLayerError(std::vector<double> &next_deltas) {
 		errors[fLi]=error;
 		deltas[fLi]=error*output*(1-output);
 
-		stringstream strm;
-		strm << "Error/delta for node " << fLi+1 << " " << error << "/" << deltas[fLi];
-		log(strm.str());
+		if(DEBUG) cout << "Error/delta for node " << fLi+1 << " " << error << "/" << deltas[fLi] << endl;
 	}
 }
 
@@ -176,9 +168,7 @@ void Layer::findOutputLayerError(std::vector<double> &target) {
 		errors[i]=error;
 		deltas[i]=error*output*(1-output);
 
-		stringstream strm;
-		strm << "Error/delta for node " << i+1 << " " << error << "/" << deltas[i];
-		log(strm.str());
+		if(DEBUG) cout << "Error/delta for node " << i+1 << " " << error << "/" << deltas[i] << endl;
 	}
 }
 
@@ -204,7 +194,7 @@ void Layer::propagate(std::vector<double> &incoming) {
 //Util functions
 
 void log(string line) {
-	if(true) cout << line << endl;
+	if(DEBUG) cout << line << endl;
 }
 
 double randomReal() {
