@@ -99,7 +99,7 @@ void NeuralNetwork::adjustWeights() {
 
 		Layer& layer1 = *(layers[i-1]);
 		Layer& layer2 = *(layers[i]);
-		layer2.adjustWeights(learningRate,layer1.outputs);
+		layer2.adjustWeights(learningRate,momentum,layer1.outputs);
 	}
 }
 
@@ -117,6 +117,7 @@ Layer::Layer(int s) {
 	this->outputs.resize(s);
 	this->errors.resize(s);
 	this->deltas.resize(s);
+	this->changes.resize(s);
 }
 
 double Layer::sigmoid(double in) {
@@ -124,21 +125,26 @@ double Layer::sigmoid(double in) {
 	return 1.0/(1.0+exp(-in));
 }
 
-void Layer::adjustWeights(double learningRate, std::vector<double> &incoming) {
+void Layer::adjustWeights(double learningRate, double momentum, std::vector<double> &incoming) {
 	//use each incoming value to adjust each edge
 	//adjust each edge according to:
 	//change[edge] = learningRate*delta*incoming[node]+momentum*change[edge]
-	for (int i = 0; i < size; i++) {
 
+	//for each node in this layer
+	for (int i = 0; i < size; i++) {
+		//for each node in the previous layer
 		for (int j = 0; j < incoming.size(); j++) {
 
 			if(DEBUG) cout << "Adjusting node "<< i+1 << " edge "<<j+1 << endl;
 
-			double change = learningRate*deltas[i]*incoming[j];//+momentum*changes[j];
-			
-			(*backWeights)[j][i]+=change;
+			if(changes[i].size() <= j) changes[i].push_back(0); //populate the changes table
 
-			if(DEBUG) cout << "change: " << change << "=" << learningRate << " * " << deltas[i] << " * " << incoming[i];
+			double change = learningRate*deltas[i]*incoming[j]+momentum*changes[i][j];
+			
+			(*backWeights)[j][i] += change;
+			changes[i][j] = change;
+
+			if(DEBUG) cout << "change: " << change << "=" << learningRate << " * " << deltas[i] << " * " << incoming[i] << endl;
 		}
 	}
 }
@@ -146,9 +152,13 @@ void Layer::adjustWeights(double learningRate, std::vector<double> &incoming) {
 void Layer::findHiddenLayerError(std::vector<double> &next_deltas) {
 	//calculate error and delta for every node
 	//error for hidden nodes = w_ij*delj + w_ik*delk ...
+
+	//for each node in this layer
 	for (int fLi = 0; fLi < outputs.size(); fLi++) {
 		double error = 0;
 		double output = outputs[fLi];
+
+		//for each node in the next layer
 		for (int sLj = 0; sLj < next_deltas.size(); sLj++) {
 			error += next_deltas[sLj]*(*frontWeights)[fLi][sLj];
 		}
@@ -162,6 +172,8 @@ void Layer::findHiddenLayerError(std::vector<double> &next_deltas) {
 void Layer::findOutputLayerError(std::vector<double> &target) {
 	//calculate error and delta for every node
 	//error for output nodes = output[node] - target[node]
+
+	//for every output node
 	for (int i = 0; i < outputs.size(); ++i) {
 		double output = outputs[i];
 		double error = output-target[i];
@@ -174,10 +186,7 @@ void Layer::findOutputLayerError(std::vector<double> &target) {
 
 void Layer::printFrontWeights() {
 	for (int i=0; i < frontWeights->size() ; i++) {
-		for ( int j=0;j < (*frontWeights)[0].size() ; j++) {
-			cout << (*frontWeights)[i][j] << " ";
-		}
-		cout << endl;
+		printVec(&(frontWeights->at(i)));
 	}
 }
 

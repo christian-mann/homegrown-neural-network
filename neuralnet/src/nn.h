@@ -18,14 +18,15 @@ public:
 	void addLayer(int);									//appends a new layer of size int to the end of the existing network
 	void printNetwork(); 								//print all layer adj mats to stdout
 	std::vector<Layer*> layers; 						//vector of pointers to Layers
-	double learningRate = 0.8;
+	double learningRate = 0.3;
+	double momentum = 0.1;
 };
 
 class Layer {
 public:
 	Layer(int);											//initializes a Layer with a given number of nodes
 	void propagate(std::vector<double>&);				//takes a set of incoming values and calculates outputs
-	void adjustWeights(double,std::vector<double>&);	//uses learningRate and incoming outputs from the prev layer to adjust weights in backWeights
+	void adjustWeights(double,double,std::vector<double>&);	//uses learningRate and incoming outputs from the prev layer to adjust weights in backWeights
 	void findOutputLayerError(std::vector<double>&);	//finds error and delta for each node in this output layer
 	void findHiddenLayerError(std::vector<double>&);	//finds the error and delta for each node in this hidden Layer
 														//note, neither of the above methods will be called on the input layer
@@ -35,6 +36,7 @@ public:
 	std::vector<double> outputs;
 	std::vector<double> errors;
 	std::vector<double> deltas;
+	std::vector< std::vector<double> > changes;			//memory of edge adjustment
 	std::vector< std::vector<double> > *backWeights;	//pointer to back edges
 	std::vector< std::vector<double> > *frontWeights;	//pointer to front edges
 };
