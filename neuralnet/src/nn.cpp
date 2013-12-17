@@ -22,6 +22,11 @@ double mse(vector<double>&);
 
 NeuralNetwork::NeuralNetwork(int inputs, int outputs, vector<int> 	hidden) {
 	srand(time(0));
+	learningRate = 0.3;
+	momentum = 0.1;
+	maxIter = 20000;
+	errorThresh = 0.005;
+
 	Layer *inputL = new Layer(inputs);
 	this->layers.push_back(inputL);
 	for(int i=0;i<hidden.size();i++) {
@@ -197,7 +202,7 @@ void Layer::findOutputLayerError(vector<double> &target) {
 	//for every output node
 	for (int i = 0; i < outputs.size(); ++i) {
 		double output = outputs[i];
-		double error = output-target[i];
+		double error = target[i]-output;
 		errors[i]=error;
 		deltas[i]=error*output*(1-output);
 
@@ -277,5 +282,5 @@ double mse(vector<double> &errors) {
 	{
 		err += pow(errors[i],2.0);
 	}
-	return err;
+	return err/(double)errors.size();
 }

@@ -9,6 +9,7 @@ using namespace std;
 
 const size_t MAX_SIZE = (size_t)-1;
 
+//uses getline, but deletes anything after a hashmark #
 void parseLine(ifstream &input_file,string &line) {
 	if(getline(input_file,line)) {
 		size_t s = line.find('#');
