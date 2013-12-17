@@ -9,33 +9,13 @@
 
 using namespace std;
 
-void log(string line) {
-	if(true) cout << line << endl;
-}
+//forward declars for util functions located at bottom of this file
+void log(string);
+double randomReal();
+std::vector<std::vector<double> >* getRandomWeightArray(int,int);
+void printVec(std::vector<double>*);
 
-double randomReal() {
-	return static_cast <double> (rand()) / static_cast <double> (RAND_MAX);
-}
-
-std::vector<std::vector<double> >* getRandomWeightArray(int r,int c) {
-	std::vector<std::vector<double> > *arr = new std::vector<std::vector<double> >();
-	for(int i=0;i<r;i++) {
-		std::vector<double> vec;
-		arr->push_back(vec);
-		for (int j = 0; j < c; j++) {
-			(*arr)[i].push_back(randomReal()*RANGE-RANGE/2);
-		}
-	}
-	return arr;
-}
-
-void printVec(std::vector<double> *vec) {
-	for (int i = 0; i < (*vec).size(); ++i)
-	{
-		cout<<(*vec)[i]<<" ";
-	}
-	cout<<endl;
-}
+//NeuralNetwork class
 
 NeuralNetwork::NeuralNetwork(int inputs, int outputs, std::vector<int> 	hidden) {
 	srand(time(0));
@@ -132,6 +112,15 @@ void NeuralNetwork::printNetwork() {
 	}
 }
 
+//Layer class
+
+Layer::Layer(int s) {
+	this->size=s;
+	this->outputs.resize(s);
+	this->errors.resize(s);
+	this->deltas.resize(s);
+}
+
 double Layer::sigmoid(double in) {
 	//sigmoid(in) = 1/(1+e^(-in))
 	return 1.0/(1.0+exp(-in));
@@ -193,13 +182,6 @@ void Layer::findOutputLayerError(std::vector<double> &target) {
 	}
 }
 
-Layer::Layer(int s) {
-	this->size=s;
-	this->outputs.resize(s);
-	this->errors.resize(s);
-	this->deltas.resize(s);
-}
-
 void Layer::printFrontWeights() {
 	for (int i=0; i < frontWeights->size() ; i++) {
 		for ( int j=0;j < (*frontWeights)[0].size() ; j++) {
@@ -217,4 +199,34 @@ void Layer::propagate(std::vector<double> &incoming) {
 		}
 		outputs[i]=sigmoid(outputs[i]);
 	}
+}
+
+//Util functions
+
+void log(string line) {
+	if(true) cout << line << endl;
+}
+
+double randomReal() {
+	return static_cast <double> (rand()) / static_cast <double> (RAND_MAX);
+}
+
+std::vector<std::vector<double> >* getRandomWeightArray(int r,int c) {
+	std::vector<std::vector<double> > *arr = new std::vector<std::vector<double> >();
+	for(int i=0;i<r;i++) {
+		std::vector<double> vec;
+		arr->push_back(vec);
+		for (int j = 0; j < c; j++) {
+			(*arr)[i].push_back(randomReal()*RANGE-RANGE/2);
+		}
+	}
+	return arr;
+}
+
+void printVec(std::vector<double> *vec) {
+	for (int i = 0; i < (*vec).size(); ++i)
+	{
+		cout<<(*vec)[i]<<" ";
+	}
+	cout<<endl;
 }

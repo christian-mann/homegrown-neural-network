@@ -82,40 +82,12 @@ int main(int argc, char const *argv[]) {
 
 	input_file.close();
 
-	cout << inputs << " " << outputs << endl;
-	for (int i = 0; i < hiddens.size(); ++i)
-	{
-		cout<< hiddens[i] <<" ";
-	}
-	cout << endl;
-
-	for (int i = 0; i < trainPats.size(); ++i)
-	{
-		Pattern& p = *(trainPats[i]);
-		std::vector<double>& inputs = *(p.inputs);
-		std::vector<double>& outputs = *(p.outputs);
-		for (int j = 0; j < inputs.size(); ++j) {
-			cout << inputs[j] << " ";
-		}
-		cout << endl;
-		for (int j = 0; j < outputs.size(); ++j) {
-			cout << outputs[j] << " ";
-		}
-		cout << endl;
-	}
-
 	NeuralNetwork network(inputs,outputs,hiddens);
 	network.printNetwork();
 	network.train(trainPats);
 	network.printNetwork();
-	// network.train(trainPats);
-	// network.printNetwork();
-	// network.train(trainPats);
-	// network.printNetwork();
-	// network.train(trainPats);
-	// network.printNetwork();
-	// network.train(trainPats);
-	// network.printNetwork();
+
+	//HARD CODED XOR TEST
 
 	// int inputs = 2;
 	// int outputs = 1;
