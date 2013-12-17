@@ -19,8 +19,8 @@ void parseLine(ifstream &input_file,string &line) {
 void parsePatternFile(ifstream &pat_file,
 					  int &inputs,
 					  int &outputs,
-					  std::vector<int> &hiddens,
-					  std::vector<Pattern*> &trainPats)
+					  vector<int> &hiddens,
+					  vector<Pattern*> &trainPats)
 {
 	string line;
 	istringstream iss;
@@ -37,8 +37,8 @@ void parsePatternFile(ifstream &pat_file,
 	iss >> ntrains >> nvalids;
 	for (int i = 0; i < ntrains; ++i) {
 		Pattern *p = new Pattern();
-		std::vector<double> *inputs = new std::vector<double>();
-		std::vector<double> *outputs = new std::vector<double>();
+		vector<double> *inputs = new vector<double>();
+		vector<double> *outputs = new vector<double>();
 		(*p).inputs = inputs;
 		(*p).outputs = outputs;
 		trainPats.push_back(p);
@@ -75,43 +75,61 @@ int main(int argc, char const *argv[]) {
 	}
 
 	int inputs,outputs;
-	std::vector<int> hiddens;
-	std::vector<Pattern*> trainPats;
+	vector<int> hiddens;
+	vector<Pattern*> trainPats;
 
 	parsePatternFile(input_file,inputs,outputs,hiddens,trainPats);
 
 	input_file.close();
 
 	NeuralNetwork network(inputs,outputs,hiddens);
+
 	cout << "Weights before training:" << endl;
 	network.printNetwork();
+
+	cout << endl;
+	cout << "Test Run 1" << endl;
+	cout << "Input: 0,0 Output: " << network.run((*trainPats[0]).inputs)[0] << endl;
+	cout << "Input: 0,1 Output: " << network.run((*trainPats[1]).inputs)[0] << endl;
+	cout << "Input: 1,0 Output: " << network.run((*trainPats[2]).inputs)[0] << endl;
+	cout << "Input: 1,1 Output: " << network.run((*trainPats[3]).inputs)[0] << endl;
+
+	cout << endl << "Begin Training" << endl;
 	network.train(trainPats);
+
 	cout << endl << "Weights after training:" << endl;
 	network.printNetwork();
+
+	cout << endl;
+	cout << "Test Run 2" << endl;
+	cout << "Input: 0,0 Output: " << network.run((*trainPats[0]).inputs)[0] << endl;
+	cout << "Input: 0,1 Output: " << network.run((*trainPats[1]).inputs)[0] << endl;
+	cout << "Input: 1,0 Output: " << network.run((*trainPats[2]).inputs)[0] << endl;
+	cout << "Input: 1,1 Output: " << network.run((*trainPats[3]).inputs)[0] << endl;
 
 	//HARD CODED XOR TEST
 
 	// int inputs = 2;
 	// int outputs = 1;
-	// std::vector<int> hidden;
+	// vector<int> hidden;
 	// hidden.push_back(2);
 
 	// NeuralNetwork network(inputs,outputs,hidden);
 	// // network.printNetwork();
 
-	// std::vector<Pattern*>& trainPats = *(new std::vector<Pattern*>());
+	// vector<Pattern*>& trainPats = *(new vector<Pattern*>());
 	// Pattern *p1 = new Pattern();
-	// std::vector<double> *i1 = new std::vector<double>({0.0,0.0});
-	// std::vector<double> *o1 = new std::vector<double>({0.0});
+	// vector<double> *i1 = new vector<double>({0.0,0.0});
+	// vector<double> *o1 = new vector<double>({0.0});
 	// Pattern *p2 = new Pattern();
-	// std::vector<double> *i2 = new std::vector<double>({0.0,1.0});
-	// std::vector<double> *o2 = new std::vector<double>({1.0});
+	// vector<double> *i2 = new vector<double>({0.0,1.0});
+	// vector<double> *o2 = new vector<double>({1.0});
 	// Pattern *p3 = new Pattern();
-	// std::vector<double> *i3 = new std::vector<double>({1.0,0.0});
-	// std::vector<double> *o3 = new std::vector<double>({1.0});
+	// vector<double> *i3 = new vector<double>({1.0,0.0});
+	// vector<double> *o3 = new vector<double>({1.0});
 	// Pattern *p4 = new Pattern();
-	// std::vector<double> *i4 = new std::vector<double>({1.0,1.0});
-	// std::vector<double> *o4 = new std::vector<double>({0.0});
+	// vector<double> *i4 = new vector<double>({1.0,1.0});
+	// vector<double> *o4 = new vector<double>({0.0});
 	// p1->inputs=i1;
 	// p2->inputs=i2;
 	// p3->inputs=i3;

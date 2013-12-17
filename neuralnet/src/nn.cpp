@@ -5,7 +5,7 @@
 #include "cmath"
 #include "sstream"
 
-#define RANGE 5.0
+#define RANGE 0.4
 #define DEBUG false
 
 using namespace std;
@@ -13,12 +13,13 @@ using namespace std;
 //forward declars for util functions located at bottom of this file
 void log(string);
 double randomReal();
-std::vector<std::vector<double> >* getRandomWeightArray(int,int);
-void printVec(std::vector<double>*);
+vector<vector<double> >* getRandomWeightArray(int,int);
+void printVec(vector<double>*);
+void print2dVec(vector<vector<double> > *vec);
 
 //NeuralNetwork class
 
-NeuralNetwork::NeuralNetwork(int inputs, int outputs, std::vector<int> 	hidden) {
+NeuralNetwork::NeuralNetwork(int inputs, int outputs, vector<int> 	hidden) {
 	srand(time(0));
 	Layer *inputL = new Layer(inputs);
 	this->layers.push_back(inputL);
@@ -31,13 +32,13 @@ NeuralNetwork::NeuralNetwork(int inputs, int outputs, std::vector<int> 	hidden) 
 void NeuralNetwork::addLayer(int nodes) {
 	Layer *lastLayer = layers.back();
 	Layer *newLayer = new Layer(nodes);
-	std::vector<std::vector<double> > *adjMat = getRandomWeightArray(lastLayer->size,newLayer->size);
+	vector<vector<double> > *adjMat = getRandomWeightArray(lastLayer->size,newLayer->size);
 	lastLayer->frontWeights = adjMat;
 	newLayer->backWeights = adjMat;
 	this->layers.push_back(newLayer);
 }
 
-void NeuralNetwork::train(std::vector<Pattern*> patterns) {
+void NeuralNetwork::train(vector<Pattern*> patterns) {
 	log("Training pattern");
 	for(int i=0;i<patterns.size();i++) {
 		this->trainPattern(patterns[i]);
@@ -54,10 +55,10 @@ void NeuralNetwork::trainPattern(Pattern *pat) {
 	adjustWeights();
 }
 
-std::vector<double> NeuralNetwork::run(std::vector<double> *inputs) {
+vector<double> NeuralNetwork::run(vector<double> *inputs) {
 	log("Beginning propagation.");
 
-	this->layers.front()->outputs = (*inputs);
+	this->layers[0]->outputs = *inputs;
 	for(int i=1;i<layers.size();i++) {
 		layers[i]->propagate(layers[i-1]->outputs);
 	}
@@ -67,7 +68,7 @@ std::vector<double> NeuralNetwork::run(std::vector<double> *inputs) {
 	return layers.back()->outputs;
 }
 
-void NeuralNetwork::findError(std::vector<double> *outputs) {
+void NeuralNetwork::findError(vector<double> *outputs) {
 	log("Beginning error computation.");
 	//run findOutputLayerError on last layer using outputs
 	//run findHiddenLayerError on all other layers, except for input, using the predecessor's delta vector
@@ -92,7 +93,7 @@ void NeuralNetwork::adjustWeights() {
 
 	log("Adjusting edge weights");
 	for (int i = 1; i < layers.size(); i++) {
-		if(DEBUG) cout << "Adjusting layer "<<i+1 << endl;
+		if(true) cout << "Adjusting layer "<<i+1 << endl;
 
 		Layer& layer1 = *(layers[i-1]);
 		Layer& layer2 = *(layers[i]);
@@ -122,7 +123,7 @@ double Layer::sigmoid(double in) {
 	return 1.0/(1.0+exp(-in));
 }
 
-void Layer::adjustWeights(double learningRate, double momentum, std::vector<double> &incoming) {
+void Layer::adjustWeights(double learningRate, double momentum, vector<double> &incoming) {
 	//use each incoming value to adjust each edge
 	//adjust each edge according to:
 	//change[edge] = learningRate*delta*incoming[node]+momentum*change[edge]
@@ -134,19 +135,22 @@ void Layer::adjustWeights(double learningRate, double momentum, std::vector<doub
 
 			if(DEBUG) cout << "Adjusting node "<< i+1 << " edge "<<j+1 << endl;
 
-			if(changes[i].size() <= j) changes[i].push_back(0); //populate the changes table
+			//initialize the changes table
+			if(changes[i].size() <= j) changes[i].push_back(0); 
 
 			double change = learningRate*deltas[i]*incoming[j]+momentum*changes[i][j];
 			
 			(*backWeights)[j][i] += change;
 			changes[i][j] = change;
 
-			if(DEBUG) cout << "change: " << change << "=" << learningRate << " * " << deltas[i] << " * " << incoming[i] << endl;
+			if(true) cout << "change: " << change << "=" << learningRate << " * " << deltas[i] << " * " << incoming[i] << endl;
 		}
 	}
+
+	if(true) print2dVec(&changes);
 }
 
-void Layer::findHiddenLayerError(std::vector<double> &next_deltas) {
+void Layer::findHiddenLayerError(vector<double> &next_deltas) {
 	//calculate error and delta for every node
 	//error for hidden nodes = w_ij*delj + w_ik*delk ...
 
@@ -166,7 +170,7 @@ void Layer::findHiddenLayerError(std::vector<double> &next_deltas) {
 	}
 }
 
-void Layer::findOutputLayerError(std::vector<double> &target) {
+void Layer::findOutputLayerError(vector<double> &target) {
 	//calculate error and delta for every node
 	//error for output nodes = output[node] - target[node]
 
@@ -182,18 +186,30 @@ void Layer::findOutputLayerError(std::vector<double> &target) {
 }
 
 void Layer::printFrontWeights() {
-	for (int i=0; i < frontWeights->size() ; i++) {
-		printVec(&(frontWeights->at(i)));
-	}
+	// for (int i=0; i < frontWeights->size() ; i++) {
+	// 	printVec(&(frontWeights->at(i)));
+	// }
+	print2dVec(frontWeights);
 }
 
-void Layer::propagate(std::vector<double> &incoming) {
+void Layer::propagate(vector<double> &incoming) {
+	if(true) {
+		cout << "Incoming: ";
+		printVec(&incoming);
+	}
+
 	for(int i=0;i<outputs.size();i++) {
 		outputs[i]=0; //can later be replaced by a bias
 		for(int j=0;j<incoming.size();j++) {
-			outputs[i] += incoming[j] * (*backWeights)[j][i];
+			double o = incoming[j] * (*backWeights)[j][i];
+			outputs[i] += o;
+			// cout << "Calc: "<< o << " = " << incoming[j] << " * " << (*backWeights)[j][i] << endl;
 		}
 		outputs[i]=sigmoid(outputs[i]);
+	}
+	if(true) {
+		cout << "Outgoing: ";
+		printVec(&outputs);
 	}
 }
 
@@ -207,10 +223,10 @@ double randomReal() {
 	return static_cast <double> (rand()) / static_cast <double> (RAND_MAX);
 }
 
-std::vector<std::vector<double> >* getRandomWeightArray(int r,int c) {
-	std::vector<std::vector<double> > *arr = new std::vector<std::vector<double> >();
+vector<vector<double> >* getRandomWeightArray(int r,int c) {
+	vector<vector<double> > *arr = new vector<vector<double> >();
 	for(int i=0;i<r;i++) {
-		std::vector<double> vec;
+		vector<double> vec;
 		arr->push_back(vec);
 		for (int j = 0; j < c; j++) {
 			(*arr)[i].push_back(randomReal()*RANGE-RANGE/2);
@@ -219,10 +235,17 @@ std::vector<std::vector<double> >* getRandomWeightArray(int r,int c) {
 	return arr;
 }
 
-void printVec(std::vector<double> *vec) {
+void printVec(vector<double> *vec) {
 	for (int i = 0; i < (*vec).size(); ++i)
 	{
 		cout<<(*vec)[i]<<" ";
 	}
 	cout<<endl;
+}
+
+void print2dVec(vector<vector<double> > *vec) {
+	for (int i = 0; i < (*vec).size(); ++i)
+	{
+		printVec(&((*vec)[i]));
+	}
 }
