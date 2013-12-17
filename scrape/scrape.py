@@ -24,7 +24,7 @@ def scrape():
     threads = {}
 
     p = ThreadPool(8)
-    map(parseYear, [(y, data[y]) for y in YEARS])
+    p.map(parseYear, [(y, data[y]) for y in YEARS])
 
     return data
 
@@ -49,20 +49,26 @@ def scrapePage(m, y):
     lines = table.text.replace(u'\xa0', ' ').split('\n')
 
     # fingerprint -- which style is it?
-
+    ret = None
     if 'WS FORM: F-6' in lines[0]:
-        return scrapePageA(lines)
+        ret = scrapePageA(lines)
     elif lines[0].startswith('TULSA OKLAHOMA LOCAL CLIMATOLOGICAL DATA'):
-        return scrapePageB(lines)
+        ret = scrapePageB(lines)
     elif lines[0].startswith('PRELIMINARY LOCAL CLIMATOLOGICAL DATA') and lines[2].startswith('LATITUDE'):
         # roughly 1990 - 2000
-        return scrapePageC(lines)
+        ret = scrapePageC(lines)
     elif lines[0].startswith('PRELIMINARY LOCAL CLIMATOLOGICAL DATA') and lines[4].startswith('LATITUDE'):
         # roughly 1983 - 1989
-        return scrapePageD(lines)
+        ret = scrapePageD(lines)
     else:
         print lines[0]
         raise Exception("table format not recognized")
+
+    for d in ret:
+        ret[d]['month'] = MONTHS.index(m)
+        ret[d]['year'] = y
+
+    return ret
 
 
 def scrapePageA(lines):
@@ -208,4 +214,4 @@ def tdirection(s):
 if __name__ == '__main__':
     data = scrape()
     with open('data/data.json', 'w') as f:
-        json.dump(data, f)
+        json.dump(data, f, indent=4)
