@@ -1,0 +1,15 @@
+Backpropogation:
+
+Run forward
+
+Starting at end, calculate Delta and Error for each node.
+In output layer, for a node i error = target[i]-output[i]
+In hidden layers, for a node i, error = w_ij * j.del + w_ik * k.del +...
+
+Starting at second layer (skip input layer), adjust edge weights
+Given set of outputs from previous layer, aka incoming values,
+For each node in the layer, i:
+	For each incoming edge to i, k:
+		change = learningRate * delta * incoming[k] + momentum * change[k]
+		change[k] = change
+		weight[k] += change
