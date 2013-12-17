@@ -15,7 +15,7 @@ public:
 	void train(vector<Pattern*>);				//runs trainPattern on a list of patterns
 	double trainPattern(Pattern*);				//uses a pattern to train the network
 	vector<double> run(vector<double>*);		//propogates given inputs through network and returns the network output
-	double findError(vector<double>*);			//use a set of outputs for the output layer and propagates back
+	void findError(vector<double>*);			//use a set of outputs for the output layer and propagates back
 	void adjustWeights();						//uses errors and deltas found in findError to adjust edge weights
 	void addLayer(int);							//appends a new layer of size int to the end of the existing network
 	void printNetwork(); 						//print all layer adj mats to stdout
