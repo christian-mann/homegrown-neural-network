@@ -30,21 +30,22 @@ In this project we wrote our own Neural Network in C++. We then used it to appro
 
 We began by researching existing Neural Networks to get an idea for what kind of elements should be present in a network. There are many already availabe, and all have a varying set of features and capabilities. Many implementations are able to take advantage of a computer's GPU to parallelize the computations. The most simplistic example Network we could find, though, was a Javascript implementation known as Brain.js \cite{brain}. We used Brain.js as a guide for creating our own Neural Network in C++ with the hopes of performing faster than Javascript at a lower level, but not near the performance of a GPGPU solution.
 
-We chose to use the Sigmoid function for its simplicity and convenient derivative. The convenient derivative is important as it will be computed a lot during training. Using a non-linear activation function also keeps our network from being limited to approximating linear functions \cite{Hornik}.
+We chose to use the Sigmoid function, $S(t)$, for its simplicity and convenient derivative. The convenient derivative is important as it will be computed a lot during training. Using a non-linear activation function also keeps our network from being limited to approximating linear functions \cite{hornik}. The derivative is used to modify error terms for each node which are eventually used to effect the change in weight to incoming edges. Since the derivate of the sigmoid function is highest for values around 0 (and S(0) = 0.5), multiplying the error by the derivative tends to favors error associated with outputs where $S(output)\approx0.5$, in turn causing them to adjust weights quicker.
 
 	\[S(t) = \frac{1}{1+e^{-t}}\]
 	\[\frac{d}{dt}S(t) = S(t) * (1-S(t))\]
 
-
-In addition to the use of the Sigmoid function for node activation, and an accompanying bias used to alter the value of each node, we discovered the use of a momentum factor in Brain.js which we also incorporated in our own model. The momentum is intended to help the network avoid local minimums by increasing the change made to a given edge by some fraction of the change made to the edge on the previous iteration of backproppogation. It is intutive to think of this as momentum; an edge that is changed a lot once will only be changed by a lesser amount after the course of several successive smaller changes.
+In addition to the use of the Sigmoid function for node activation, and an accompanying bias used to alter the total value of each node when determining activation, we discovered the use of a momentum factor in Brain.js which we also incorporated in our own model. The momentum is intended to help the network avoid local minimums by increasing the change made to a given edge by some fraction of the change made to the edge on the previous iteration of backproppogation. It is intutive to think of this as momentum; an edge that is changed a lot once will only be changed by a lesser amount after the course of several successive smaller changes.
 
 \section{Approximating the XOR Function}
 
-Once the network was approaching completion, the first function we used to begin testing the network was the simple, yet popular, XOR function.
+Once the network was approaching completion, the first function we used to begin testing the network was the simple, yet popular, XOR function. After some debugging and fine tuning, we were able to build a network of 5 nodes (2 input, 1 output, 1 hidden layer with 2 nodes) which was trained to approximate XOR. The only training patterns given were the 4 boolean expressions in Table~\ref{tab:xortable}, but they each one was used to train the network roughly 4000 times to achieve adequate results with a sufficiently low error. The results of the inputs being fed through the resulting trained network can be seen in the right hand column of Table~\ref{tab:xortable}.
+
+However, we were not satisfied to know that XOR performed appropriately for exactly the inputs we fed it repeatedly until we recieved low error. We were curious what the rest of the domain looked like after training. What did $(I_1=0.34, I_2=0.64)$ look like. To see what the rest of the graph looked like, we fed the trained network various $X$ and $Y$ inputs. We were suprised to see the graceful 3D surface shown in Figure~\ref{fig:xor1} and Figure~\ref{fig:xor2}.
 
 \section{Approximating a Parametric Circle}
 
-Once we had the XOR function working properly, we wanted to step up the difficulty. We created a bunch of data points approximating a parametric plot of a circle. Using 1 input for a $t$ variable and 2 outputs for $x$ and $y$ we trained the network unti
+Once we had the XOR function working properly, we wanted to step up the difficulty. Next we wanted to approximated a parametric function with one input as the $t$ value and two outputs for the $x$ and $y$ values. We created roughly 30 data points approximating the parametric plot of a circle, and trained the network for many iterations longer than the XOR function. We then used a validation set of 100 datapoints around the circle to see how the network performed. The result can be seen in Figure~\ref{fig:circle} where the red circle is the actual validation set, and the blue circle is the one approximated by the network.
 
 \section{Approximating a Parametric Coffee Cup}
 
@@ -56,6 +57,26 @@ Once we had the XOR function working properly, we wanted to step up the difficul
 \bibliography{citations}
 
 \end{multicols}
+
+\begin{table}[ht]
+	\caption{XOR Truth Table}
+	\label{tab:xortable}
+	\begin{center}
+		\begin{tabular}{cc|cc}
+		\hline
+		\hline
+		\textbf{$In_1$} & \textbf{$In_2$} & \textbf{$Out$} & NeuralNet \\
+		\hline
+			$0.0$ & $0.0$ & $0.0$ & $0.0062$\\
+			$0.0$ & $1.0$ & $1.0$ & $0.9934$\\
+			$1.0$ & $0.0$ & $1.0$ & $0.9934$\\
+			$1.0$ & $1.0$ & $0.0$ & $0.0086$\\
+		\hline
+
+		\hline
+		\end{tabular}
+	\end{center}
+\end{table}
 
 \begin{figure}[tb]
 	\begin{center}
