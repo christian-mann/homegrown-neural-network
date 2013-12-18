@@ -2,6 +2,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
 \usepackage{multicol}
+\usepackage{multirow}
 \usepackage{cite}
 
 \title{Project 2\\Using a Feed-Forward Neural Network with a Sigmoid Activation Function and Supervised Learning Techniques to Approximate Parametric Curves}
@@ -46,7 +47,7 @@ The primary initial parameters that must be set prior to running our network are
 
 Once the network was approaching completion, the first function we used to begin testing the network was the simple, yet popular, XOR function. After some debugging and fine tuning, we were able to build a network of 5 nodes (2 input, 1 output, and 1 hidden layer with 2 nodes) which was trained to approximate XOR. The only training patterns given were the 4 boolean expressions in Table~\ref{tab:xortable}, but each one was used to train the network roughly 4000 times to achieve adequate results with a sufficiently low error. The results of the inputs being fed through the resulting trained network can be seen in the right hand column of Table~\ref{tab:xortable}.
 
-However, we were not satisfied to know that XOR performed appropriately for exactly the inputs we fed it repeatedly, we were curious what the rest of the output looked like after training. For example, what did $(I_1=0.34, I_2=0.64)$ look like? To see what the rest of the graph looked like, we fed the trained network a circle of $X$ and $Y$ inputs. We were suprised to see the gradual rise and fall of the 3D surface shown in Figure~\ref{fig:xor1} and Figure~\ref{fig:xor2}.
+However, we were not satisfied to know that XOR performed appropriately for exactly the inputs we fed it repeatedly, we were curious what the rest of the output looked like after training. For example, what did $(I_1=0.34, I_2=0.64)$ look like? To see what the rest of the graph looked like, we fed the trained network a circle of $X$ and $Y$ inputs. We were surprised to see the gradual rise and fall of the 3D surface shown in Figure~\ref{fig:xor1} and Figure~\ref{fig:xor2}.
 
 \section{Approximating a Parametric Circle}
 
@@ -55,6 +56,12 @@ Once we had the XOR function working properly, we wanted to step up the difficul
 \section{Approximating a Parametric Coffee Cup}
 
 As a more difficult challenge in parametric plot approximations, we used Wolfram Alpha to generate a parametric plot drawing of a coffee cup \cite{wolfram}. The training data of the original plot can be seen in Figure~\ref{fig:coffee1} and consists of 300 points. Various starting parameters were used to try to approximate this coffee cup, but in the end it proved far too complex to do in a small amount of time on our limited hardware. After training the neural network for about 3 Million iterations, the graph in Figure~\ref{fig:coffee4} was achieved. The red outline is the training data while the blue outline is the output of the neural network. It's clear that the training had some significant effect, but did not converge as well as we had hoped. Some shapes are clearly defined, such as the outline of the steam on the right. Other sections, such as the handle and the body, make it clear what the network was going for, but still look like the drawing of a 3 year old. However, the right hand side of the saucer plate is a complete mess.
+
+%\section{Weather Prediction}
+
+%We wanted to use our network to learn something useful. We decided to attempt to use our network to predict the weather for Tulsa, Oklahoma. Because NOAA provides complete records for Tulsa from January of 1983\cite{noaa}, we had a large corpus of data: Each day has a min/max temperature, rainfall, wind velocity, and other such properties associated with it. We wrote a web scraper to extract the formatted data into a neutral format, so that we could work with it. After throwing out the days with bad data, we ended up with approximately 2300 data points. In order to make this fit our neural network, we decided to create datapoints of the form $f(day_{n}) = day_{n+1}$. Since there are $12$ properties per day, this means our network has $12$ inputs and $12$ outputs. We used three hidden layers of $5$ nodes each to approximate the function.
+
+%Due to the large amount of data, we did not need to perform as many iterations through the data as other, smaller examples. In fact, after the first few hundred iterations, the neural network was essentially fully trained, with the error on the validation set fairly low. Some sample predictions are shown in Table~\ref{tab:weather}. Unfortunately, the network did not appear to learn anything useful about the weather in Oklahoma. It only appears to have learned averages for climate data, as can be seen from the output.
 
 \section{Conclusion and Future Work}
 
@@ -86,6 +93,7 @@ At the start of the project, we wanted to use the network, along with some weath
 		\end{tabular}
 	\end{center}
 \end{table}
+
 
 \begin{figure}[tb]
 	\begin{center}
@@ -126,6 +134,14 @@ At the start of the project, we wanted to use the network, along with some weath
 	\caption{neural Coffee Approximation in Blue}
 	\label{fig:coffee4}
 \end{figure}
+
+%\begin{table}[ht]
+	%\caption{Sample Weather Predictions}
+	%\begin{tabular}[cccccc]
+		%& MIN & MAX & DEP & WNDSPD & WNDDR \\
+	%\end{tabular}
+	%\label{tab:weather}
+%\end{table}
 
 \end{document}
 
