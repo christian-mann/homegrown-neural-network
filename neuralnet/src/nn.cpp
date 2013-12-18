@@ -63,12 +63,12 @@ void NeuralNetwork::train(vector<Pattern*> &patterns) {
 	double sum = 0.0;
 	while(i<maxIter && error > errorThresh) {
 		sum = 0.0;
-		for(int i=0;i<numPats;i++) {
+		for(int j=0;j<numPats;j++) {
 			sum += (this->trainPattern(patterns[i]));
 		}
 		error = sum / (double) numPats;
 		i++;
-		if(i%100000==0)cout << "Error: " << error << "; Iterations: " << i << endl;
+		if(i%100==0)cout << "Error: " << error << "; Iterations: " << i << endl;
 	}
 }
 
