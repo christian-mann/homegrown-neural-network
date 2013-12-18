@@ -4,9 +4,10 @@
 \usepackage{multicol}
 \usepackage{cite}
 
-\title{Project 2\\Tulsa Weather Prediction using a Feed-Forward Neural Network with a Sigmoid Activation Function and Supervised Learning Techniques}
+\title{Project 2\\Using a Feed-Forward Neural Network with a Sigmoid Activation Function and Supervised Learning Techniques to Predict Tulsa Weather}
 
-\author{Christian Mann, Steven Reed}
+\author{Christian Mann, Steven Reed \\
+		University of Tulsa}
 
 \begin{document}
 
@@ -15,16 +16,16 @@
 \begin{multicols}{2}
 
 \begin{abstract}
-In this paper we develop our own Feed-Forward Neural Network based off of previous examples found in the book and on the Internet. The Neural Network features Backpropogation for supervised learning. We then use it to approximate various functions. First we approximate the simple XOR function, then we attempt to approximate the behavior of weather in Tulsa, OK.
+In this paper we develop our own Feed-Forward Neural Network based off of previous examples found in the book, Fundamentals of Computational Neuroscience \cite{trappenberg}, and on the Internet. Our Neural Network features Backpropogation for supervised learning. We then use it to approximate various parametric functions. Finally we attempt to approximate the behavior of weather in Tulsa, OK based on past weather data provided by the NOAA.
 \end{abstract}
 
 \section{Introduction}
 
-A Neural Network is an abstract concept derived from studies in neuroscience. The general concept behind the structure of a Neural Network is simple to understand, yet it proves to be an incredibly difficult challenge to create a network of use. The purpose of a Neural Network is, in short, to approximate a function. Sometimes this function is known explicitly, but is difficult or expensive to compute. Other times the function cannot be explicitly known, but we can gather empirical data relating to the function. With a Neural Network, the goal is to approximate these functions using what information we have available about them.
+A Neural Network can take many forms, but the ideas behind them all are derived from studies in the field of neuroscience. The general concept behind the structure of a Neural Network is simple to understand, a simple graph structure coupled with a few additional rules. Yet it proves to be an incredibly difficult challenge to create a network of any use. The purpose of a Neural Network is, in short, to approximate a function. Sometimes this function is known explicitly, but is difficult or expensive to compute. Other times the function cannot be explicitly known, but we can gather empirical data relating to the function and use it to create a network. Ultimately, the goal of a Neural Network is to approximate a function using whatever information about the function that we can get our hands on.
 
-There are two main techniques in developing the structure of a Neural Network. One technique is called Supervised Learning, in which the Network is ``trained'' by means of giving it example inputs and outputs from the function we want it to approximate. After pouring over the examples over and over, the Network (hopefully) becomes well equipped at evaluating those inputs, as well as similar ones. It does this by making many small changes to the weights associated with the edges in the network using a method known as ``backpropogation'' \cite{trappenberg}. The second popular method for constructing a Neural Network is known as Unsupervised Learning; we do not use any Unsupervised Learning techniques in this project.
+There are two main techniques in developing the structure of a Neural Network. The first technique is called Supervised Learning where the Network is ``trained'' by means of giving it example inputs and outputs from the function we want it to approximate. After pouring over the examples over and over, the Network (hopefully) converges to a certain structure and becomes well equipped at mimicking the original function. It does this by making many small changes to the weights associated with the edges in the network using a method known as ``backpropogation'' \cite{trappenberg}. The second popular method for constructing a Neural Network is known as Unsupervised Learning where the desired outcome is not known and the machine is responsible for finding correlations. We do not use any Unsupervised Learning techniques in this project.
 
-In this project we wrote our own Neural Network in C++. We then used it to approximate various functions. These functions included the XOR function, a parametric circle, a parametric coffee cup, and ultimately using Tulsa weather data to predict Tulsa weather. The detailed parametric functions used were acquired via the Wolfram Alpha search engine \cite{wolfram}.
+In this project we wrote our own Neural Network in C++. We then used it to approximate various functions. These functions included the XOR function, a parametric circle, a parametric coffee cup, and ultimately using Tulsa, OK weather data to predict future weather in Tulsa, OK.
 
 \section{Building a Neural Network}
 
@@ -51,7 +52,7 @@ Once we had the XOR function working properly, we wanted to step up the difficul
 
 \section{Approximating a Parametric Coffee Cup}
 
-As a more difficult challenge in parametric plot approximations, we used Wolfram Alpha to generate a parametric plot drawing of a coffee cup. The training data of the original plot can be seen in Figure~\ref{fig:coffee1}. Various neural network dimensions were used to try to approximate this coffee cup, but in the end it proved far too complex to do in a small amount of time. After training the neural network for 3 Million iterations, the graph in Figure~\ref{fig:coffee4} was achieved. The red outline is the training data while the blue outline is the output of the neural network. It's clear that the training had some significant effect, but did not converge as well as we had hoped. Some shapes are clearly defined, such as the outline of the steam on the right. Other sections, such as the handle and the body, make it clear what the network was going for, but still look like the drawing of a 3 year old. However, the right hand side of the saucer plate is a complete mess.
+As a more difficult challenge in parametric plot approximations, we used Wolfram Alpha to generate a parametric plot drawing of a coffee cup \cite{wolfram}. The training data of the original plot can be seen in Figure~\ref{fig:coffee1}. Various neural network dimensions were used to try to approximate this coffee cup, but in the end it proved far too complex to do in a small amount of time. After training the neural network for 3 Million iterations, the graph in Figure~\ref{fig:coffee4} was achieved. The red outline is the training data while the blue outline is the output of the neural network. It's clear that the training had some significant effect, but did not converge as well as we had hoped. Some shapes are clearly defined, such as the outline of the steam on the right. Other sections, such as the handle and the body, make it clear what the network was going for, but still look like the drawing of a 3 year old. However, the right hand side of the saucer plate is a complete mess.
 
 \section{Weather Prediction}
 
