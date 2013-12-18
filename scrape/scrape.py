@@ -15,7 +15,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 
 MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Oct', 'Nov', 'Dec']
-YEARS = range(1983, 1990)
+YEARS = range(1983, 2013+1)
 
 BASE_URL = 'http://www.srh.noaa.gov/tsa/f6/f6.php?siteName=Tulsa_International_Airport&month=%s&year=%d'
 
@@ -198,6 +198,8 @@ def tfloat(s):
     if s.strip() == 'M': return None # no data
     if s.strip() == '': return 0.0 # I guess?
     if s.strip() == '0..': return 0.0 # people are dumb
+    if float(s.strip()) == 249: return 24.9 # one specific case is incorrect
+    if float(s.strip()) == 170: return 27.0 # one specific case is incorrect
     else: return float(s)
 
 def tdirection(s):

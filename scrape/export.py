@@ -35,6 +35,9 @@ def iterate(data):
             for d in sorted(data[y][m], key=int):
                 yield (y, m, d, data[y][m][d])
 
+def size(data):
+    return sum(1 for d in iterate(data))
+
 def scale(num, minimum, maximum):
     if num is None:
         # no data for some reason
@@ -54,7 +57,7 @@ if __name__ == '__main__':
     # how many layers, etc
     out_file.write('%d %d %d %d' % (len(FIELDS), len(FIELDS), 20, 20) + '\n')
     # unused
-    out_file.write('4 4' + '\n')
+    out_file.write('%d %d\n' % (size(data) * 0.9, size(data)*0.1))
 
 
     prev_element = None
