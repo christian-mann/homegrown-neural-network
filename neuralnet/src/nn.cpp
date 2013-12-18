@@ -23,8 +23,8 @@ double mse(vector<double>&);
 NeuralNetwork::NeuralNetwork(int inputs, int outputs, vector<int> 	hidden) {
 	srand(time(0));
 	learningRate = 0.3;
-	momentum = 0.1;
-	maxIter = 20000;
+	momentum = 0.3;
+	maxIter = 100000;
 	errorThresh = 0.005;
 
 	Layer *inputL = new Layer(inputs);
