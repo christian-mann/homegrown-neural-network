@@ -25,7 +25,7 @@ NeuralNetwork::NeuralNetwork(int inputs, int outputs, vector<int> 	hidden) {
 	learningRate = 0.3;
 	momentum = 0.1;
 	maxIter = 20000;
-	errorThresh = 0.005;
+	errorThresh = 0.00005;
 
 	Layer *inputL = new Layer(inputs);
 	this->layers.push_back(inputL);
@@ -64,12 +64,13 @@ void NeuralNetwork::train(vector<Pattern*> &patterns) {
 	while(i<maxIter && error > errorThresh) {
 		sum = 0.0;
 		for(int j=0;j<numPats;j++) {
-			sum += (this->trainPattern(patterns[i]));
+			sum += (this->trainPattern(patterns[j]));
 		}
 		error = sum / (double) numPats;
 		i++;
-		if(i%100==0)cout << "Error: " << error << "; Iterations: " << i << endl;
+		if(i%1000==0)cout << "Error: " << error << "; Iterations: " << i << endl;
 	}
+	cout << "Error: " << error << "; Iterations: " << i << endl;
 }
 
 double NeuralNetwork::trainPattern(Pattern *pat) {
