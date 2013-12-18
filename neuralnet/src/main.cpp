@@ -99,7 +99,7 @@ int main(int argc, char const *argv[]) {
 
 	string file_name = argv[1];
 	ifstream input_file;
-	input_file.open(file_name);
+	input_file.open(file_name.c_str());
 
 	if(!input_file.is_open()) {
 		cout << "Couldn't open file "<< file_name << endl;

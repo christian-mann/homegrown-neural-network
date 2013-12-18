@@ -20,6 +20,7 @@ FIELDS['mx_spd'] = (0.0, 80.0) # maximum average wind speed
 FIELDS['min_dir'] = (0.0, 360.0) # average wind direction
 FIELDS['pk_dir'] = (0.0, 360.0) # peak wind direction
 FIELDS['pk_spd'] = (0.0, 100.0) # peak wind speed
+FIELDS['month'] = (0.0, 12.0) # month of year herp derp
 
 print [FIELDS[k] for k in FIELDS]
 
