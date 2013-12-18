@@ -23,10 +23,25 @@ A Neural Network is an abstract concept derived from studies in neuroscience. Th
 
 There are two main techniques in developing the structure of a Neural Network. One technique is called Supervised Learning, in which the Network is ``trained'' by means of giving it example inputs and outputs from the function we want it to approximate. After pouring over the examples over and over, the Network (hopefully) becomes well equipped at evaluating those inputs, as well as similar ones. It does this by making many small changes to the weights associated with the edges in the network using a method known as ``backpropogation''. The second popular method for constructing a Neural Network is known as Unsupervised Learning; we do not use any Unsupervised Learning techniques in this project.
 
-We began by researching existing Neural Networks. There are many available, and all have a varying set of features and capabilities. Many implementations take advantage of your computer's GPU to parallelize the computations. The most simplistic example Network we could find, though, was a javascript implementation known as Brain.js. We used Brain.js as a guide for creating our own Neural Network in C++ with the hopes of performing faster at a lower level.
+In this project we wrote our own Neural Network in C++. We then used it to approximate various functions. These functions included the XOR function, a parametric circle, a parametric coffee cup, and ultimately using Tulsa weather data to predict Tulsa weather. The detailed parametric functions used were acquired via the Wolfram Alpha search engine.
+
+\section{Building a Neural Network}
+
+We began by researching existing Neural Networks to get an idea for what kind of elements should be present in a network. There are many already availabe, and all have a varying set of features and capabilities. Many implementations are able to take advantage of a computer's GPU to parallelize the computations. The most simplistic example Network we could find, though, was a Javascript implementation known as Brain.js. We used Brain.js as a guide for creating our own Neural Network in C++ with the hopes of performing faster than Javascript at a lower level, but not near the performance of a GPGPU solution.
+
+\section{Approximating the XOR Function}
+
+Once the network was approaching completion, the first function we used to begin testing the network was the simple, yet popular, XOR function. T
+
+\section{Approximating a Parametric Circle}
+
+\section{Approximating a Parametric Coffee Cup}
+
+\section{Weather Prediction}
+
+\section{Conclusion and Future Work}
 
 
-\section{Conclusion}
 
 \end{multicols}
 
