@@ -1,4 +1,4 @@
-colors = ['y','m','c','r','g','b','w','k'];
+colors = ['y','b','c','r','g','m','w','k'];
 nColors = 8;
 
 files = input('List of files: ');
@@ -16,7 +16,8 @@ for i = [1:length(files)]
 	xyz=xyz(2:end,:);
 	x = xyz(:,1);
 	y = xyz(:,2);
+	z = xyz(:,3);
 
-	plot3(x,y,z,colors(mod(i,nColors)+1));
+	scatter3(x,y,z,colors(mod(i,nColors)+1));
 	fclose(in);
 end
