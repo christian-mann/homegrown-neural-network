@@ -17,10 +17,10 @@ for i = [1:length(files)]
 	x = xy(:,1);
 	y = xy(:,2);
 
-	if(i==1)
+	% if(i==1)
+	% 	plot(x,y,colors(mod(i,nColors)+1));
+	% else
 		plot(x,y,colors(mod(i,nColors)+1));
-	else
-		scatter(x,y,colors(mod(i,nColors)+1));
-	end
+	% end
 	fclose(in);
 end

@@ -49,7 +49,7 @@ Once we had the XOR function working properly, we wanted to step up the difficul
 
 \section{Approximating a Parametric Coffee Cup}
 
-As a more difficult challenge in parametric plot approximations, we used Wolfram Alpha to generate a parametric plot drawing of a coffee cup. The training data of the original plot can be seen in Figure~\ref{fig:coffee1}. Various neural network dimensions were used to try to approximate this coffee cup, but in the end it proved far too complex to do in a small amount of time. Two of the better approximations can be seen in Figure~\ref{fig:coffee3}. The red outline is the training data. It's clear that the training had some effect, but did not converge as well as we had hoped.
+As a more difficult challenge in parametric plot approximations, we used Wolfram Alpha to generate a parametric plot drawing of a coffee cup. The training data of the original plot can be seen in Figure~\ref{fig:coffee1}. Various neural network dimensions were used to try to approximate this coffee cup, but in the end it proved far too complex to do in a small amount of time. After training the neural network for 3 Million iterations, the graph in Figure~\ref{fig:coffee4} was achieved. The red outline is the training data while the blue outline is the output of the neural network. It's clear that the training had some effect, but did not converge as well as we had hoped.
 
 \section{Weather Prediction}
 
@@ -114,10 +114,10 @@ As a more difficult challenge in parametric plot approximations, we used Wolfram
 
 \begin{figure}[tb]
 	\begin{center}
-		\includegraphics[scale=0.4]{img/coffee3}
+		\includegraphics[scale=0.4]{img/coffee4}
 	\end{center}
-	\caption{Scatter Plot of Two Approximations}
-	\label{fig:coffee3}
+	\caption{Neural Coffee Approximation in Blue}
+	\label{fig:coffee4}
 \end{figure}
 
 \end{document}
