@@ -13,10 +13,14 @@ for i = [1:length(files)]
 	while ~feof(in)
 		xy=[xy;fscanf(in,'%f',2)'];
 	end
-	xy=xy(2:end,:);
+	xy=xy(2:end-1,:);
 	x = xy(:,1);
 	y = xy(:,2);
 
-	plot(x,y,colors(mod(i,nColors)+1));
+	if(i==1)
+		plot(x,y,colors(mod(i,nColors)+1));
+	else
+		scatter(x,y,colors(mod(i,nColors)+1));
+	end
 	fclose(in);
 end

@@ -22,9 +22,9 @@ double mse(vector<double>&);
 
 NeuralNetwork::NeuralNetwork(int inputs, int outputs, vector<int> 	hidden) {
 	srand(time(0));
-	learningRate = 0.3;
-	momentum = 0.3;
-	maxIter = 1000000;
+	learningRate = 0.4;
+	momentum = 0.15;
+	maxIter = 3000000;
 	errorThresh = 0.00005;
 
 	Layer *inputL = new Layer(inputs);
@@ -68,7 +68,7 @@ void NeuralNetwork::train(vector<Pattern*> &patterns) {
 		}
 		error = sum / (double) numPats;
 		i++;
-		if(i%1000==0) cout << "Error: " << error << "; Iterations: " << i << "\r";
+		if(i%100000==0)cout << "Error: " << error << "; Iterations: " << i << endl;
 	}
 }
 
