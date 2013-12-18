@@ -4,7 +4,7 @@
 \usepackage{multicol}
 \usepackage{cite}
 
-\title{Project 2\\Using a Feed-Forward Neural Network with a Sigmoid Activation Function and Supervised Learning Techniques to Predict Tulsa Weather}
+\title{Project 2\\Using a Feed-Forward Neural Network with a Sigmoid Activation Function and Supervised Learning Techniques to Approximate Parametric Curves}
 
 \author{Christian Mann, Steven Reed \\
 		University of Tulsa}
@@ -16,7 +16,7 @@
 \begin{multicols}{2}
 
 \begin{abstract}
-In this paper we develop our own Feed-Forward neural network based off of previous examples found in the book, Fundamentals of Computational neuroscience \cite{trappenberg}, and on the Internet. Our neural network features Backpropogation for supervised learning. We then use it to approximate various parametric functions. Finally we attempt to approximate the behavior of weather in Tulsa, OK based on past weather data provided by the nOAA.
+In this paper we develop our own Feed-Forward neural network based off of previous examples found in the book, Fundamentals of Computational neuroscience \cite{trappenberg}, and on the Internet. Our neural network features backpropagation for supervised learning. We then use it to approximate two parametric functions.
 \end{abstract}
 
 \section{Introduction}
@@ -25,9 +25,9 @@ A neural network can take many forms, but the ideas behind them all are derived 
 
 As simple as this concept is, it proves to be an incredibly difficult challenge to create a network of any use. The purpose of a neural network is, in short, to approximate a function. Sometimes this function is known explicitly, but is difficult or expensive to compute. Other times the function cannot be explicitly known, but we can gather empirical data relating to the function and use it to create a network. Ultimately, the goal of a neural network is to approximate a function using whatever information about the function that we can get our hands on.
 
-There are two main techniques in developing the structure of a neural network. The first technique is called Supervised Learning where the network is ``trained'' by means of giving it example inputs and outputs from the function we want it to approximate. After pouring over the examples over and over, the network (hopefully) converges to a certain structure and becomes well equipped at mimicking the original function. It does this by making many small changes to the weights associated with the edges in the network using a method known as ``backpropogation'' \cite{trappenberg}. The second popular method for constructing a neural network is known as Unsupervised Learning where the desired outcome is not known and the machine is responsible for finding correlations. We do not use any Unsupervised Learning techniques in this project.
+There are two main techniques in developing the structure of a neural network. The first technique is called Supervised Learning where the network is ``trained'' by means of giving it example inputs and outputs from the function we want it to approximate. After pouring over the examples over and over, the network (hopefully) converges to a certain structure and becomes well equipped at mimicking the original function. It does this by making many small changes to the weights associated with the edges in the network using a method known as ``backpropagation'' \cite{trappenberg}. The second popular method for constructing a neural network is known as Unsupervised Learning where the desired outcome is not known and the machine is responsible for finding correlations. We do not use any Unsupervised Learning techniques in this project.
 
-In this project we wrote our own neural network in C++. We then used it to approximate various functions. These functions included the XOR function, a parametric circle, a parametric coffee cup, and ultimately using Tulsa, OK weather data to predict future weather in Tulsa, OK.
+In this project we wrote our own neural network in C++. We then used it to approximate various functions. These functions included the XOR function, a parametric circle, and complex parametric curve illustrating a coffee cup.
 
 \section{Building a neural network}
 
@@ -56,11 +56,11 @@ Once we had the XOR function working properly, we wanted to step up the difficul
 
 As a more difficult challenge in parametric plot approximations, we used Wolfram Alpha to generate a parametric plot drawing of a coffee cup \cite{wolfram}. The training data of the original plot can be seen in Figure~\ref{fig:coffee1} and consists of 300 points. Various starting parameters were used to try to approximate this coffee cup, but in the end it proved far too complex to do in a small amount of time on our limited hardware. After training the neural network for about 3 Million iterations, the graph in Figure~\ref{fig:coffee4} was achieved. The red outline is the training data while the blue outline is the output of the neural network. It's clear that the training had some significant effect, but did not converge as well as we had hoped. Some shapes are clearly defined, such as the outline of the steam on the right. Other sections, such as the handle and the body, make it clear what the network was going for, but still look like the drawing of a 3 year old. However, the right hand side of the saucer plate is a complete mess.
 
-\section{Weather Prediction}
-
 \section{Conclusion and Future Work}
 
 It is clear that our network approximates functions to some extent, however, it is also clear that it could benefit from more features. Trying other non-linear activation functions than our chosen Sigmoid would be one way to generate different, and perhaps more accurate, networks. Another way would be to try various parameter settings for learning rate, momentum, hidden layer dimensions, and training/validation sets. We have found that finding the right parameter settings can be just as hard of a problem as finding the right network weights. If we really wanted to speed things up, we could try to parallelize the computations on a GPU. However, this is outside the scope of our current expertise.
+
+At the start of the project, we wanted to use the network, along with some weather data, to try and approximate a weather forecast for Tulsa, OK. In the time allotted for the project, we were able to run some tests, but ultimately we were not able to gather data of any use. Due to the complexity of the problem, to really create good tests we would need to try several different initial parameters and run them each for long periods of time. The time and cost required to do this would easily be more than we have this semester. However, it is likely that such tests would be better suited for a more featured parallel neural network rather than our toy network built for this project.
 
 \bibliographystyle{abbrv}
 \bibliography{citations}
